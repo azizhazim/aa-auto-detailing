@@ -69,7 +69,7 @@ const jsonLd = {
   image: "https://anaautodetailing.com/og-image.jpg",
   url: "https://anaautodetailing.com",
   telephone: "+1-512-229-8145",
-  email: "wildcarlr2@gmail.com",
+  email: "610aaautodetailing@gmail.com",
   priceRange: "$$",
   address: {
     "@type": "PostalAddress",

@@ -48,8 +48,8 @@ export default function Footer() {
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                   <polyline points="22,6 12,13 2,6" />
                 </svg>
-                <a href="mailto:wildcarlr2@gmail.com" className="hover:text-coral transition-colors break-all">
-                  wildcarlr2@gmail.com
+                <a href="mailto:610aaautodetailing@gmail.com" className="hover:text-coral transition-colors break-all">
+                  610aaautodetailing@gmail.com
                 </a>
               </li>
               <li className="flex items-start gap-2.5 text-mist-300/90">
