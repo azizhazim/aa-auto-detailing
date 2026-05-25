@@ -47,7 +47,7 @@ const extras: Extra[] = [
     name: "Pet Hair Removal",
     description:
       "Surcharge for heavy pet hair embedded in carpets and upholstery.",
-    price: "+$40",
+    price: "+$145",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <circle cx="6" cy="9" r="2" />
@@ -62,7 +62,7 @@ const extras: Extra[] = [
     name: "Excessive Mess Surcharge",
     description:
       "Applied to heavily soiled vehicles requiring extended cleaning time.",
-    price: "+$50",
+    price: "+$120",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M12 2v4M5 8l3 3M19 8l-3 3M3 14h4M17 14h4" />
