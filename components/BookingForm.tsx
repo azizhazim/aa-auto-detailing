@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import { addOns, formatPrice } from "@/lib/addons";
 
 const timeSlots = [
   "12 PM – 3 PM",
@@ -31,6 +32,7 @@ type FormState = {
   carModel: string;
   timeSlot: string;
   packageSel: string;
+  addOnIds: string[];
   notes: string;
 };
 
@@ -43,6 +45,7 @@ const initial: FormState = {
   carModel: "",
   timeSlot: "",
   packageSel: "",
+  addOnIds: [],
   notes: "",
 };
 
@@ -53,9 +56,17 @@ export default function BookingForm() {
   const [error, setError] = useState<string | null>(null);
 
   const update =
-    (k: keyof FormState) =>
+    (k: Exclude<keyof FormState, "addOnIds">) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
       setForm((f) => ({ ...f, [k]: e.target.value }));
+
+  const toggleAddOn = (id: string) =>
+    setForm((f) => ({
+      ...f,
+      addOnIds: f.addOnIds.includes(id)
+        ? f.addOnIds.filter((x) => x !== id)
+        : [...f.addOnIds, id],
+    }));
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -245,6 +256,45 @@ export default function BookingForm() {
                     ))}
                   </select>
                 </div>
+
+                <fieldset>
+                  <legend className="label-base mb-2">Add-Ons (Optional)</legend>
+                  <div className="space-y-2">
+                    {addOns.map((a) => {
+                      const checked = form.addOnIds.includes(a.id);
+                      return (
+                        <label
+                          key={a.id}
+                          className={`flex items-start gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-colors ${
+                            checked
+                              ? "border-coral bg-coral/5"
+                              : "border-mist-200 bg-white hover:border-mist-300"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => toggleAddOn(a.id)}
+                            className="mt-1 w-4 h-4 accent-coral cursor-pointer"
+                          />
+                          <span className="flex-1">
+                            <span className="flex items-baseline justify-between gap-2">
+                              <span className="text-sm font-semibold text-navy-800">
+                                {a.label}
+                              </span>
+                              <span className="text-sm font-display font-bold text-navy-800">
+                                {formatPrice(a.price)}
+                              </span>
+                            </span>
+                            <span className="block text-xs text-slate-500 mt-0.5">
+                              {a.description}
+                            </span>
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </fieldset>
 
                 <div>
                   <label className="label-base" htmlFor="notes">Notes (Optional)</label>

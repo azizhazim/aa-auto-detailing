@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { addOns, formatPrice, getAddOnById } from "@/lib/addons";
 
 export const runtime = "nodejs";
 
@@ -12,10 +13,11 @@ type BookingPayload = {
   carModel?: string;
   timeSlot?: string;
   packageSel?: string;
+  addOnIds?: string[];
   notes?: string;
 };
 
-const REQUIRED_FIELDS: (keyof BookingPayload)[] = [
+const REQUIRED_STRING_FIELDS: (keyof Omit<BookingPayload, "addOnIds" | "notes">)[] = [
   "name",
   "phone",
   "date",
@@ -35,7 +37,31 @@ function escapeHtml(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
-function renderHtml(p: Required<BookingPayload>): string {
+type FilledBooking = {
+  name: string;
+  phone: string;
+  date: string;
+  carYear: string;
+  carMake: string;
+  carModel: string;
+  timeSlot: string;
+  packageSel: string;
+  addOnIds: string[];
+  notes: string;
+};
+
+function formatAddOnsLine(ids: string[]): string {
+  if (!ids.length) return "None";
+  const selected = ids.map(getAddOnById).filter((a): a is NonNullable<typeof a> => Boolean(a));
+  if (!selected.length) return "None";
+  const total = selected.reduce((sum, a) => sum + a.price, 0);
+  return (
+    selected.map((a) => `${a.label} (${formatPrice(a.price)})`).join(", ") +
+    ` — Add-on total: ${formatPrice(total)}`
+  );
+}
+
+function renderHtml(p: FilledBooking): string {
   const rows: [string, string][] = [
     ["Name", p.name],
     ["Phone", p.phone],
@@ -43,6 +69,7 @@ function renderHtml(p: Required<BookingPayload>): string {
     ["Time Slot", p.timeSlot],
     ["Vehicle", `${p.carYear} ${p.carMake} ${p.carModel}`.trim()],
     ["Package", p.packageSel],
+    ["Add-Ons", formatAddOnsLine(p.addOnIds)],
     ["Notes", p.notes || "—"],
   ];
   const body = rows
@@ -62,7 +89,7 @@ function renderHtml(p: Required<BookingPayload>): string {
   </div>`;
 }
 
-function renderText(p: Required<BookingPayload>): string {
+function renderText(p: FilledBooking): string {
   return [
     "New Booking Request — A&A Auto Detailing",
     "",
@@ -72,6 +99,7 @@ function renderText(p: Required<BookingPayload>): string {
     `Time Slot: ${p.timeSlot}`,
     `Vehicle: ${p.carYear} ${p.carMake} ${p.carModel}`,
     `Package: ${p.packageSel}`,
+    `Add-Ons: ${formatAddOnsLine(p.addOnIds)}`,
     `Notes: ${p.notes || "—"}`,
   ].join("\n");
 }
@@ -84,13 +112,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const missing = REQUIRED_FIELDS.filter((k) => !payload[k]?.toString().trim());
+  const missing = REQUIRED_STRING_FIELDS.filter((k) => !payload[k]?.toString().trim());
   if (missing.length) {
     return NextResponse.json(
       { error: `Missing required fields: ${missing.join(", ")}` },
       { status: 400 }
     );
   }
+
+  const validAddOnIds = new Set(addOns.map((a) => a.id));
+  const cleanedAddOnIds = Array.isArray(payload.addOnIds)
+    ? payload.addOnIds.filter((id) => typeof id === "string" && validAddOnIds.has(id))
+    : [];
 
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.BOOKING_TO_EMAIL;
@@ -104,7 +137,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const filled = {
+  const filled: FilledBooking = {
     name: payload.name || "",
     phone: payload.phone || "",
     date: payload.date || "",
@@ -113,6 +146,7 @@ export async function POST(req: Request) {
     carModel: payload.carModel || "",
     timeSlot: payload.timeSlot || "",
     packageSel: payload.packageSel || "",
+    addOnIds: cleanedAddOnIds,
     notes: payload.notes || "",
   };
 

@@ -1,3 +1,5 @@
+import { addOns, formatPrice } from "@/lib/addons";
+
 type Pkg = {
   id: string;
   name: string;
@@ -5,7 +7,7 @@ type Pkg = {
   carPrice: string;
   suvPrice: string;
   features: string[];
-  addOn?: string;
+  addOnId?: string;
   highlight?: boolean;
   badge?: string;
 };
@@ -25,7 +27,7 @@ const packages: Pkg[] = [
       "Windows cleaned inside-out (exterior)",
       "Door jambs wiped down",
     ],
-    addOn: "Add Headlight Restoration",
+    addOnId: "headlight",
   },
   {
     id: "interior",
@@ -41,7 +43,7 @@ const packages: Pkg[] = [
       "Interior glass cleaning",
       "Air vents & crevice detailing",
     ],
-    addOn: "Add Ozone Odor Removal",
+    addOnId: "ozone",
   },
   {
     id: "show-off",
@@ -178,11 +180,25 @@ function PriceCard({ pkg }: { pkg: Pkg }) {
         ))}
       </ul>
 
-      {pkg.addOn && (
-        <div className="mb-5 text-xs font-bold uppercase tracking-wider text-coral border-t border-mist-200 pt-4">
-          + {pkg.addOn}
-        </div>
-      )}
+      {pkg.addOnId && (() => {
+        const addOn = addOns.find((a) => a.id === pkg.addOnId);
+        if (!addOn) return null;
+        return (
+          <div className="mb-5 border-t border-mist-200 pt-4">
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-coral">
+                + Add {addOn.label}
+              </span>
+              <span className="text-sm font-display font-bold text-navy-800">
+                {formatPrice(addOn.price)}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              Select in booking form. {addOn.description}
+            </p>
+          </div>
+        );
+      })()}
 
       <a
         href="#booking"
