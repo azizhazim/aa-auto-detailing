@@ -35,6 +35,9 @@ export const metadata: Metadata = {
   authors: [{ name: "A&A Auto Detailing" }],
   creator: "A&A Auto Detailing",
   metadataBase: new URL("https://anaautodetailing.com"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "A&A Auto Detailing | Premium Car Detailing in Central Texas",
     description:
@@ -60,13 +63,23 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  category: "Automotive",
+  formatDetection: {
+    telephone: true,
+    address: true,
+    email: true,
+  },
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "AutoDetailing",
+  "@id": "https://anaautodetailing.com/#business",
   name: "A&A Auto Detailing",
-  image: "https://anaautodetailing.com/og-image.jpg",
+  description:
+    "Professional mobile auto detailing serving Austin, Buda, Kyle, San Marcos, and Central Texas. Interior & exterior detailing, ceramic coating, and paint correction.",
+  image: "https://anaautodetailing.com/opengraph-image",
+  logo: "https://anaautodetailing.com/icon.svg",
   url: "https://anaautodetailing.com",
   telephone: "+1-512-229-8145",
   email: "610aaautodetailing@gmail.com",
@@ -79,16 +92,45 @@ const jsonLd = {
     postalCode: "78610",
     addressCountry: "US",
   },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 30.0855,
+    longitude: -97.8403,
+  },
   areaServed: [
-    { "@type": "City", name: "Austin" },
-    { "@type": "City", name: "Buda" },
-    { "@type": "City", name: "Kyle" },
-    { "@type": "City", name: "San Marcos" },
+    { "@type": "City", name: "Austin", "@id": "https://en.wikipedia.org/wiki/Austin,_Texas" },
+    { "@type": "City", name: "Buda", "@id": "https://en.wikipedia.org/wiki/Buda,_Texas" },
+    { "@type": "City", name: "Kyle", "@id": "https://en.wikipedia.org/wiki/Kyle,_Texas" },
+    { "@type": "City", name: "San Marcos", "@id": "https://en.wikipedia.org/wiki/San_Marcos,_Texas" },
+  ],
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      opens: "08:00",
+      closes: "18:00",
+    },
   ],
   sameAs: [
     "https://www.facebook.com/people/AA-Auto-Detailing/100089112146854/",
     "https://www.instagram.com/austinautodetailer/",
   ],
+  potentialAction: {
+    "@type": "ReserveAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://anaautodetailing.com/#booking",
+      inLanguage: "en-US",
+      actionPlatform: [
+        "http://schema.org/DesktopWebPlatform",
+        "http://schema.org/MobileWebPlatform",
+      ],
+    },
+    result: {
+      "@type": "Reservation",
+      name: "Detailing Appointment",
+    },
+  },
 };
 
 export default function RootLayout({
