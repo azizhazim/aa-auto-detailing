@@ -48,12 +48,11 @@ export default function Hero() {
               </a>
             </div>
 
-            <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-2xl">
+            <div className="mt-16 grid grid-cols-3 gap-3 sm:gap-4 max-w-xl">
               {[
                 { v: "5★", l: "Rated Service" },
                 { v: "100+", l: "Happy Clients" },
-                { v: "2-Yr", l: "Ceramic Warranty" },
-                { v: "Mobile", l: "We Come To You" },
+                { v: "Mobile", l: "Availability" },
               ].map((s) => (
                 <div
                   key={s.l}
