@@ -1,13 +1,21 @@
-const items = [
-  { tag: "Ceramic Coating", label: "2022 Tesla Model 3", tone: "from-mist-300 to-navy-700" },
-  { tag: "Full Show-Off", label: "2019 Ford F-150", tone: "from-coral-light to-coral-dark" },
-  { tag: "Paint Correction", label: "2020 BMW M340i", tone: "from-navy-700 to-navy-900" },
-  { tag: "Interior Detail", label: "2021 Toyota 4Runner", tone: "from-shell-200 to-mist-300" },
-  { tag: "Exterior Detail", label: "2018 Honda Civic", tone: "from-mist-200 to-navy-700" },
-  { tag: "Ceramic + Correction", label: "2023 Audi RS5", tone: "from-coral to-coral-deep" },
-];
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
+
+const TOTAL_PHOTOS = 58;
+const INITIAL_VISIBLE = 12;
+
+const photos = Array.from({ length: TOTAL_PHOTOS }, (_, i) => {
+  const n = String(i + 1).padStart(2, "0");
+  return { src: `/gallery/${n}.jpg`, alt: `A&A Auto Detailing portfolio photo ${i + 1}` };
+});
 
 export default function Gallery() {
+  const [expanded, setExpanded] = useState(false);
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const visible = expanded ? photos : photos.slice(0, INITIAL_VISIBLE);
+
   return (
     <section id="gallery" className="section-padding bg-shell-100">
       <div className="container-narrow">
@@ -19,11 +27,11 @@ export default function Gallery() {
             </h2>
             <p className="text-slate-600">
               A look at recent transformations across Austin, Buda, Kyle, and
-              San Marcos. Photos and full case studies coming soon.
+              San Marcos. Tap any photo to view full size.
             </p>
           </div>
           <a
-            href="https://www.instagram.com/"
+            href="https://www.instagram.com/austinautodetailer/"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-secondary self-start lg:self-auto"
@@ -32,41 +40,104 @@ export default function Gallery() {
           </a>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-          {items.map((item, i) => (
-            <div
-              key={i}
-              className={`group relative aspect-square rounded-2xl overflow-hidden border border-mist-200 shadow-soft bg-gradient-to-br ${item.tone} hover:shadow-card transition-all`}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+          {visible.map((photo, i) => (
+            <button
+              key={photo.src}
+              type="button"
+              onClick={() => setLightbox(i)}
+              className="group relative aspect-square rounded-2xl overflow-hidden border border-mist-200 shadow-soft hover:shadow-card transition-all bg-mist-100 focus:outline-none focus:ring-2 focus:ring-coral focus:ring-offset-2 focus:ring-offset-shell-100"
+              aria-label={`View ${photo.alt}`}
             >
-              {/* Placeholder visual */}
-              <div className="absolute inset-0 flex items-center justify-center text-white/40">
-                <svg
-                  width="64"
-                  height="64"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                >
-                  <path d="M5 17l3-4 4 5 4-6 3 5" />
-                  <rect x="2" y="3" width="20" height="18" rx="2" />
-                </svg>
-              </div>
-
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-900/75 via-navy-900/10 to-transparent" />
-
-              <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                <span className="inline-block text-[10px] sm:text-xs uppercase tracking-wider text-white font-bold mb-1 bg-coral px-2 py-0.5 rounded-full">
-                  {item.tag}
-                </span>
-                <div className="text-sm sm:text-base text-white font-semibold drop-shadow">
-                  {item.label}
-                </div>
-              </div>
-            </div>
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                priority={i < 4}
+                loading={i < 4 ? undefined : "lazy"}
+              />
+              <div className="absolute inset-0 bg-navy-900/0 group-hover:bg-navy-900/20 transition-colors" />
+            </button>
           ))}
         </div>
+
+        {!expanded && photos.length > INITIAL_VISIBLE && (
+          <div className="flex justify-center mt-10">
+            <button
+              type="button"
+              onClick={() => setExpanded(true)}
+              className="btn-secondary"
+            >
+              Show All {photos.length} Photos
+            </button>
+          </div>
+        )}
       </div>
+
+      {lightbox !== null && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Photo viewer"
+          className="fixed inset-0 z-50 bg-navy-900/90 backdrop-blur-sm flex items-center justify-center p-4 sm:p-8"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightbox(null);
+            }}
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 text-white/80 hover:text-white p-2 rounded-full bg-navy-900/50 hover:bg-navy-900/80 transition-colors"
+            aria-label="Close"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightbox((prev) => (prev === null ? null : (prev - 1 + photos.length) % photos.length));
+            }}
+            className="absolute left-2 sm:left-6 text-white/80 hover:text-white p-2 sm:p-3 rounded-full bg-navy-900/50 hover:bg-navy-900/80 transition-colors"
+            aria-label="Previous photo"
+          >
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightbox((prev) => (prev === null ? null : (prev + 1) % photos.length));
+            }}
+            className="absolute right-2 sm:right-6 text-white/80 hover:text-white p-2 sm:p-3 rounded-full bg-navy-900/50 hover:bg-navy-900/80 transition-colors"
+            aria-label="Next photo"
+          >
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
+          <div
+            className="relative w-full max-w-5xl aspect-square sm:aspect-[4/3]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={photos[lightbox].src}
+              alt={photos[lightbox].alt}
+              fill
+              sizes="100vw"
+              className="object-contain"
+              priority
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
