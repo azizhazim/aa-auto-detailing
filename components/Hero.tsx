@@ -81,7 +81,7 @@ export default function Hero() {
             {/* Primary photo — large, right-anchored */}
             <div className="absolute top-0 right-0 w-[78%] h-[68%] rounded-3xl overflow-hidden shadow-card border border-white/40 z-10">
               <Image
-                src="/gallery/06.jpg"
+                src="/gallery/35.jpg"
                 alt="Recent A&A Auto Detailing work — premium finish"
                 fill
                 sizes="(max-width: 1024px) 0px, 35vw"
@@ -93,7 +93,7 @@ export default function Hero() {
             {/* Secondary photo — bottom-left, overlapping */}
             <div className="absolute bottom-0 left-0 w-[62%] h-[48%] rounded-3xl overflow-hidden shadow-card border-4 border-shell-100 z-20">
               <Image
-                src="/gallery/19.jpg"
+                src="/gallery/26.jpg"
                 alt="A&A Auto Detailing — interior and exterior detail"
                 fill
                 sizes="(max-width: 1024px) 0px, 28vw"
