@@ -8,13 +8,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Warm sand/cream — primary backgrounds
+        // Warm sand/cream - primary backgrounds
         shell: {
           50: "#FAF6ED",
           100: "#F5F1E8",
           200: "#EAE3D2",
         },
-        // Pale slate-blue — soft surfaces, borders, chips
+        // Pale slate-blue - soft surfaces, borders, chips
         mist: {
           50: "#F0F4F8",
           100: "#E4ECF2",
@@ -22,7 +22,7 @@ const config: Config = {
           300: "#B5C8D6",
           400: "#8DA9C4",
         },
-        // Deep navy — headlines, anchors, footer
+        // Deep navy - headlines, anchors, footer
         navy: {
           500: "#415A77",
           600: "#2C4159",
@@ -39,7 +39,7 @@ const config: Config = {
           800: "#1E293B",
           900: "#0F172A",
         },
-        // Coral accent — CTAs & key highlights only (~10-15% of design)
+        // Coral accent - CTAs and key highlights only
         coral: {
           DEFAULT: "#F26C4F",
           light: "#F58F7D",

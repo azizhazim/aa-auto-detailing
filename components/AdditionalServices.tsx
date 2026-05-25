@@ -1,16 +1,14 @@
+import type { ReactNode } from "react";
+import { addOns, formatPrice } from "@/lib/addons";
+
 type Extra = {
-  name: string;
-  description: string;
-  price: string;
-  icon: React.ReactNode;
+  id: string;
+  icon: ReactNode;
 };
 
 const extras: Extra[] = [
   {
-    name: "Ozone Odor Removal",
-    description:
-      "Eliminates smoke, pet, food, and mildew odors at the molecular level.",
-    price: "$60",
+    id: "ozone",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <circle cx="12" cy="12" r="9" />
@@ -20,10 +18,7 @@ const extras: Extra[] = [
     ),
   },
   {
-    name: "Headlight Restoration",
-    description:
-      "Removes haze and yellowing to restore nighttime visibility and curb appeal.",
-    price: "$75",
+    id: "headlight",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <ellipse cx="12" cy="12" rx="9" ry="6" />
@@ -32,10 +27,7 @@ const extras: Extra[] = [
     ),
   },
   {
-    name: "Engine Bay Detailing",
-    description:
-      "Safe degrease, steam clean, and dressing for a showroom-fresh engine bay.",
-    price: "$80",
+    id: "engine-bay",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <rect x="3" y="7" width="18" height="11" rx="1" />
@@ -44,10 +36,7 @@ const extras: Extra[] = [
     ),
   },
   {
-    name: "Pet Hair Removal",
-    description:
-      "Surcharge for heavy pet hair embedded in carpets and upholstery.",
-    price: "+$145",
+    id: "pet-hair",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <circle cx="6" cy="9" r="2" />
@@ -59,10 +48,7 @@ const extras: Extra[] = [
     ),
   },
   {
-    name: "Excessive Mess Surcharge",
-    description:
-      "Applied to heavily soiled vehicles requiring extended cleaning time.",
-    price: "+$120",
+    id: "heavy-soil",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M12 2v4M5 8l3 3M19 8l-3 3M3 14h4M17 14h4" />
@@ -71,10 +57,7 @@ const extras: Extra[] = [
     ),
   },
   {
-    name: "Clay-Bar Treatment",
-    description:
-      "Removes embedded contaminants for a glass-smooth paint surface.",
-    price: "$90",
+    id: "clay-bar",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M4 16c2-4 6-6 10-6s5 3 6 6" />
@@ -83,6 +66,8 @@ const extras: Extra[] = [
     ),
   },
 ];
+
+const addOnById = new Map(addOns.map((addOn) => [addOn.id, addOn]));
 
 export default function AdditionalServices() {
   return (
@@ -97,33 +82,37 @@ export default function AdditionalServices() {
             Extras &amp; Specialty Services
           </h2>
           <p className="text-slate-600">
-            Customize your detail with these popular add-ons and specialty
+            Customize your detail with bookable add-ons and condition-based
             treatments.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {extras.map((e) => (
-            <div
-              key={e.name}
-              className="card-base p-6 flex gap-4 items-start group"
-            >
-              <div className="w-12 h-12 rounded-xl bg-mist-50 border border-mist-200 flex items-center justify-center text-navy-700 group-hover:bg-coral/10 group-hover:text-coral group-hover:border-coral/30 transition-all">
-                <div className="w-6 h-6">{e.icon}</div>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-3 mb-1">
-                  <h3 className="text-lg font-bold text-navy-800 leading-tight">
-                    {e.name}
-                  </h3>
-                  <span className="text-coral font-display font-bold text-lg whitespace-nowrap">
-                    {e.price}
-                  </span>
+          {extras.map((e) => {
+            const addOn = addOnById.get(e.id);
+            if (!addOn) return null;
+            return (
+              <div
+                key={addOn.id}
+                className="card-base p-6 flex gap-4 items-start group"
+              >
+                <div className="w-12 h-12 rounded-md bg-mist-50 border border-mist-200 flex items-center justify-center text-navy-700 group-hover:bg-coral/10 group-hover:text-coral group-hover:border-coral/30 transition-all">
+                  <div className="w-6 h-6">{e.icon}</div>
                 </div>
-                <p className="text-sm text-slate-600">{e.description}</p>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-3 mb-1">
+                    <h3 className="text-lg font-bold text-navy-800 leading-tight">
+                      {addOn.label}
+                    </h3>
+                    <span className="text-coral font-display font-bold text-lg whitespace-nowrap">
+                      +{formatPrice(addOn.price)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-600">{addOn.description}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

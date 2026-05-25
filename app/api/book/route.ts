@@ -7,6 +7,8 @@ export const runtime = "nodejs";
 type BookingPayload = {
   name?: string;
   phone?: string;
+  email?: string;
+  serviceAddress?: string;
   date?: string;
   carYear?: string;
   carMake?: string;
@@ -20,6 +22,7 @@ type BookingPayload = {
 const REQUIRED_STRING_FIELDS: (keyof Omit<BookingPayload, "addOnIds" | "notes">)[] = [
   "name",
   "phone",
+  "serviceAddress",
   "date",
   "carYear",
   "carMake",
@@ -40,6 +43,8 @@ function escapeHtml(s: string): string {
 type FilledBooking = {
   name: string;
   phone: string;
+  email: string;
+  serviceAddress: string;
   date: string;
   carYear: string;
   carMake: string;
@@ -57,7 +62,7 @@ function formatAddOnsLine(ids: string[]): string {
   const total = selected.reduce((sum, a) => sum + a.price, 0);
   return (
     selected.map((a) => `${a.label} (${formatPrice(a.price)})`).join(", ") +
-    ` — Add-on total: ${formatPrice(total)}`
+    ` - Add-on total: ${formatPrice(total)}`
   );
 }
 
@@ -65,12 +70,14 @@ function renderHtml(p: FilledBooking): string {
   const rows: [string, string][] = [
     ["Name", p.name],
     ["Phone", p.phone],
+    ["Email", p.email || "Not provided"],
+    ["Service Location", p.serviceAddress],
     ["Preferred Date", p.date],
     ["Time Slot", p.timeSlot],
     ["Vehicle", `${p.carYear} ${p.carMake} ${p.carModel}`.trim()],
     ["Package", p.packageSel],
     ["Add-Ons", formatAddOnsLine(p.addOnIds)],
-    ["Notes", p.notes || "—"],
+    ["Notes", p.notes || "-"],
   ];
   const body = rows
     .map(
@@ -84,23 +91,25 @@ function renderHtml(p: FilledBooking): string {
     .join("");
   return `<div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;background:#F5F1E8">
     <h2 style="color:#0B2545;margin:0 0 4px">New Booking Request</h2>
-    <p style="color:#64748B;margin:0 0 16px;font-size:14px">A&amp;A Auto Detailing — anaautodetailing.com</p>
+    <p style="color:#64748B;margin:0 0 16px;font-size:14px">A&amp;A Auto Detailing - anaautodetailing.com</p>
     <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #E4ECF2;border-radius:8px;overflow:hidden">${body}</table>
   </div>`;
 }
 
 function renderText(p: FilledBooking): string {
   return [
-    "New Booking Request — A&A Auto Detailing",
+    "New Booking Request - A&A Auto Detailing",
     "",
     `Name: ${p.name}`,
     `Phone: ${p.phone}`,
+    `Email: ${p.email || "Not provided"}`,
+    `Service Location: ${p.serviceAddress}`,
     `Preferred Date: ${p.date}`,
     `Time Slot: ${p.timeSlot}`,
     `Vehicle: ${p.carYear} ${p.carMake} ${p.carModel}`,
     `Package: ${p.packageSel}`,
     `Add-Ons: ${formatAddOnsLine(p.addOnIds)}`,
-    `Notes: ${p.notes || "—"}`,
+    `Notes: ${p.notes || "-"}`,
   ].join("\n");
 }
 
@@ -116,6 +125,16 @@ export async function POST(req: Request) {
   if (missing.length) {
     return NextResponse.json(
       { error: `Missing required fields: ${missing.join(", ")}` },
+      { status: 400 }
+    );
+  }
+
+  const requestedDate = new Date(`${payload.date}T00:00:00`);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (Number.isNaN(requestedDate.getTime()) || requestedDate < today) {
+    return NextResponse.json(
+      { error: "Please choose today or a future date." },
       { status: 400 }
     );
   }
@@ -140,6 +159,8 @@ export async function POST(req: Request) {
   const filled: FilledBooking = {
     name: payload.name || "",
     phone: payload.phone || "",
+    email: payload.email || "",
+    serviceAddress: payload.serviceAddress || "",
     date: payload.date || "",
     carYear: payload.carYear || "",
     carMake: payload.carMake || "",
@@ -156,8 +177,8 @@ export async function POST(req: Request) {
     const { error } = await resend.emails.send({
       from,
       to,
-      replyTo: undefined,
-      subject: `New Booking — ${filled.name} (${filled.carYear} ${filled.carMake} ${filled.carModel})`,
+      replyTo: filled.email || undefined,
+      subject: `New Booking - ${filled.name} (${filled.carYear} ${filled.carMake} ${filled.carModel})`,
       html: renderHtml(filled),
       text: renderText(filled),
     });
