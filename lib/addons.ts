@@ -18,6 +18,12 @@ export const addOns: AddOn[] = [
     price: 80,
     description: "Eliminate smoke, pet, and lingering odors at the source.",
   },
+  {
+    id: "engine-bay",
+    label: "Engine Bay Detailing",
+    price: 80,
+    description: "Safe degrease, steam clean, and dressing for a showroom-fresh engine bay.",
+  },
 ];
 
 export function formatPrice(n: number): string {
