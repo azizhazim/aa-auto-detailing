@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "A&A Auto Detailing - Premium Car Detailing in Central Texas";
+export const alt = "A&A Auto Detailing — Premium Car Detailing in Central Texas";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -50,7 +50,7 @@ export default function OpengraphImage() {
               justifyContent: "center",
               fontSize: 28,
               fontWeight: 900,
-              letterSpacing: 0,
+              letterSpacing: -1.5,
             }}
           >
             AA
@@ -76,7 +76,7 @@ export default function OpengraphImage() {
               fontWeight: 900,
               color: "#FFFFFF",
               lineHeight: 1,
-              letterSpacing: 0,
+              letterSpacing: -3,
               display: "flex",
             }}
           >
@@ -104,7 +104,7 @@ export default function OpengraphImage() {
             fontWeight: 600,
           }}
         >
-          <div style={{ display: "flex" }}>Austin, Buda, Kyle, San Marcos</div>
+          <div style={{ display: "flex" }}>Austin · Buda · Kyle · San Marcos</div>
           <div style={{ display: "flex" }}>anaautodetailing.com</div>
         </div>
       </div>

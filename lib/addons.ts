@@ -24,24 +24,6 @@ export const addOns: AddOn[] = [
     price: 80,
     description: "Safe degrease, steam clean, and dressing for a showroom-fresh engine bay.",
   },
-  {
-    id: "pet-hair",
-    label: "Pet Hair Removal",
-    price: 145,
-    description: "Deep extraction for embedded pet hair in carpets and upholstery.",
-  },
-  {
-    id: "heavy-soil",
-    label: "Excessive Mess Surcharge",
-    price: 120,
-    description: "For heavily soiled vehicles that require extended cleaning time.",
-  },
-  {
-    id: "clay-bar",
-    label: "Clay-Bar Treatment",
-    price: 90,
-    description: "Removes bonded contaminants for a glass-smooth paint surface.",
-  },
 ];
 
 export function formatPrice(n: number): string {

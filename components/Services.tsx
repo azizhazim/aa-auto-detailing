@@ -4,8 +4,6 @@ type Pkg = {
   id: string;
   name: string;
   tagline: string;
-  duration: string;
-  bestFor: string;
   carPrice: string;
   suvPrice: string;
   features: string[];
@@ -19,8 +17,6 @@ const packages: Pkg[] = [
     id: "exterior",
     name: "Exterior Detailing",
     tagline: "A showroom shine, restored.",
-    duration: "2-3 hours",
-    bestFor: "Weekly drivers, sale prep, and maintenance washes",
     carPrice: "$125",
     suvPrice: "$150",
     features: [
@@ -37,8 +33,6 @@ const packages: Pkg[] = [
     id: "interior",
     name: "Interior Detailing",
     tagline: "Deep clean. Like-new feel.",
-    duration: "3-5 hours",
-    bestFor: "Families, commuters, pet owners, and rideshare vehicles",
     carPrice: "$200",
     suvPrice: "$250",
     features: [
@@ -55,14 +49,12 @@ const packages: Pkg[] = [
     id: "show-off",
     name: "Full Show-Off Package",
     tagline: "Interior + exterior, head to toe.",
-    duration: "4-6 hours",
-    bestFor: "The best all-around reset for daily drivers",
     carPrice: "$270",
     suvPrice: "$300",
     features: [
       "Everything in Exterior Detailing",
       "Everything in Interior Detailing",
-      "Best value bundle - save vs. a la carte",
+      "Best value bundle — save vs. à la carte",
       "Full inside-and-out transformation",
       "Ideal for showings, sales, or treating yourself",
       "Top-to-bottom finishing touches",
@@ -74,8 +66,6 @@ const packages: Pkg[] = [
     id: "ceramic",
     name: "Ceramic Coating",
     tagline: "2-year protection. Liquid armor.",
-    duration: "1 day",
-    bestFor: "Long-term gloss, easier washing, and UV protection",
     carPrice: "$450",
     suvPrice: "$650",
     features: [
@@ -90,10 +80,8 @@ const packages: Pkg[] = [
   },
   {
     id: "paint-1",
-    name: "Paint Correction - 1-Step",
+    name: "Paint Correction · 1-Step",
     tagline: "Remove swirls & light defects.",
-    duration: "1 day",
-    bestFor: "Swirl removal and gloss restoration",
     carPrice: "$600+",
     suvPrice: "$600+",
     features: [
@@ -107,10 +95,8 @@ const packages: Pkg[] = [
   },
   {
     id: "paint-2",
-    name: "Paint Correction - 2-Step",
+    name: "Paint Correction · 2-Step",
     tagline: "Maximum gloss. Maximum value.",
-    duration: "1-2 days",
-    bestFor: "Deeper defects, show finishes, and ceramic prep",
     carPrice: "$1000+",
     suvPrice: "$1000+",
     features: [
@@ -164,22 +150,7 @@ function PriceCard({ pkg }: { pkg: Pkg }) {
       )}
 
       <h3 className="text-2xl font-bold text-navy-800 mb-1">{pkg.name}</h3>
-      <p className="text-sm text-slate-500 mb-4">{pkg.tagline}</p>
-
-      <div className="grid grid-cols-1 gap-2 mb-5 text-xs text-slate-600">
-        <div className="flex items-center justify-between gap-3 rounded-lg bg-shell-100/70 px-3 py-2">
-          <span className="font-bold uppercase tracking-wider text-navy-700">
-            Typical Time
-          </span>
-          <span className="font-semibold text-navy-800">{pkg.duration}</span>
-        </div>
-        <div className="rounded-lg bg-shell-100/70 px-3 py-2">
-          <span className="font-bold uppercase tracking-wider text-navy-700">
-            Best For
-          </span>
-          <p className="mt-1 leading-relaxed">{pkg.bestFor}</p>
-        </div>
-      </div>
+      <p className="text-sm text-slate-500 mb-6">{pkg.tagline}</p>
 
       <div className="grid grid-cols-2 gap-3 mb-6">
         <div className="bg-mist-50 border border-mist-200 rounded-lg p-3 text-center">
@@ -254,7 +225,7 @@ export default function Services() {
           </h2>
           <p className="text-slate-600">
             Transparent pricing for every level of care. Mobile service across
-            Central Texas. We bring the shine to your driveway.
+            Central Texas — we bring the shine to your driveway.
           </p>
         </div>
 

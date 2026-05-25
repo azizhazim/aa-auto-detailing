@@ -1,31 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 const navLinks = [
   { href: "#services", label: "Services" },
-  { href: "#why-us", label: "Why Us" },
+  { href: "#extras", label: "Extras" },
   { href: "#gallery", label: "Gallery" },
   { href: "#reviews", label: "Reviews" },
-  { href: "#faq", label: "FAQ" },
+  { href: "#booking", label: "Book Now" },
 ];
-
-function PhoneIcon() {
-  return (
-    <svg
-      className="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-    </svg>
-  );
-}
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -33,76 +16,58 @@ export default function Header() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const solid = scrolled || open;
-  const navText = solid ? "text-navy-800" : "text-white";
-
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        solid
-          ? "border-b border-mist-200 bg-white/95 shadow-soft backdrop-blur-md"
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/90 backdrop-blur-md border-b border-mist-200 shadow-soft"
           : "bg-transparent"
       }`}
     >
-      <div className="container-narrow flex h-16 items-center justify-between px-4 sm:px-6 lg:h-20 lg:px-8">
-        <a href="#" className="flex items-center gap-2">
-          <span
-            className={`font-display text-2xl font-bold tracking-wider transition-colors lg:text-3xl ${navText}`}
-          >
+      <div className="container-narrow flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16 lg:h-20">
+        <a href="#" className="flex items-center gap-2 group">
+          <span className="text-2xl lg:text-3xl font-display font-bold text-navy-800 tracking-wider">
             A&amp;A
           </span>
-          <span
-            className={`border-l pl-2 text-xs font-semibold uppercase tracking-[0.25em] text-coral transition-colors lg:text-sm ${
-              solid ? "border-mist-300" : "border-white/25"
-            }`}
-          >
+          <span className="text-xs lg:text-sm uppercase tracking-[0.25em] text-coral font-semibold border-l border-mist-300 pl-2">
             Auto Detailing
           </span>
         </a>
 
-        <nav className="hidden items-center gap-6 lg:flex">
-          {navLinks.map((link) => (
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+          {navLinks.map((l) => (
             <a
-              key={link.href}
-              href={link.href}
-              className={`text-sm font-semibold uppercase tracking-wider transition-colors hover:text-coral ${navText}`}
+              key={l.href}
+              href={l.href}
+              className="text-sm uppercase tracking-wider font-semibold text-navy-800 hover:text-coral transition-colors"
             >
-              {link.label}
+              {l.label}
             </a>
           ))}
           <a
             href="tel:+15122298145"
-            className={`flex items-center gap-1.5 text-sm font-semibold transition-colors hover:text-coral ${navText}`}
+            className="flex items-center gap-1.5 text-sm font-semibold text-navy-800 hover:text-coral transition-colors"
           >
-            <PhoneIcon />
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
             (512) 229-8145
           </a>
-          <a href="#booking" className="btn-primary !px-5 !py-2.5 text-xs">
+          <a href="#booking" className="btn-primary !py-2.5 !px-5 text-xs">
             Book Now
           </a>
         </nav>
 
         <button
-          type="button"
           aria-label="Toggle menu"
-          aria-expanded={open}
-          className={`lg:hidden transition-colors ${navText}`}
-          onClick={() => setOpen((value) => !value)}
+          className="md:hidden text-navy-800"
+          onClick={() => setOpen((v) => !v)}
         >
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden
-          >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             {open ? (
               <path d="M6 6l12 12M6 18L18 6" />
             ) : (
@@ -113,39 +78,27 @@ export default function Header() {
       </div>
 
       {open && (
-        <div className="border-t border-mist-200 bg-white shadow-soft lg:hidden">
-          <nav className="flex flex-col gap-3 px-4 py-4">
-            {navLinks.map((link) => (
+        <div className="md:hidden bg-white border-t border-mist-200 shadow-soft">
+          <nav className="flex flex-col px-4 py-4 gap-3">
+            {navLinks.map((l) => (
               <a
-                key={link.href}
-                href={link.href}
+                key={l.href}
+                href={l.href}
                 onClick={() => setOpen(false)}
-                className="py-2 text-base font-semibold uppercase tracking-wider text-navy-800 transition-colors hover:text-coral"
+                className="text-base uppercase tracking-wider font-semibold text-navy-800 hover:text-coral py-2"
               >
-                {link.label}
+                {l.label}
               </a>
             ))}
             <a
-              href="#booking"
-              onClick={() => setOpen(false)}
-              className="py-2 text-base font-semibold uppercase tracking-wider text-navy-800 transition-colors hover:text-coral"
+              href="tel:+15122298145"
+              className="flex items-center gap-2 text-base font-semibold text-coral py-2 border-t border-mist-200 mt-1 pt-3"
             >
-              Book Now
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+              Call (512) 229-8145
             </a>
-            <div className="mt-1 grid grid-cols-2 gap-3 border-t border-mist-200 pt-4">
-              <a
-                href="sms:+15122298145"
-                className="btn-secondary !px-4 !py-3 text-xs"
-              >
-                Text Us
-              </a>
-              <a
-                href="tel:+15122298145"
-                className="btn-primary !px-4 !py-3 text-xs"
-              >
-                Call Now
-              </a>
-            </div>
           </nav>
         </div>
       )}

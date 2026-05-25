@@ -35,7 +35,7 @@
     @apply max-w-7xl mx-auto;
   }
   .card-base {
-    @apply bg-white border border-mist-200 rounded-lg
+    @apply bg-white border border-mist-200 rounded-2xl
            shadow-soft hover:shadow-card hover:border-mist-300
            transition-all duration-300;
   }
